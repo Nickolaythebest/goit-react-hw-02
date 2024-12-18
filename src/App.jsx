@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import Descriptions from "./components/descriptions/Descriptions.jsx";
+import Descriptions from "./components/descriptions/Description.jsx";
 import Options from "./components/options/Options.jsx";
+import Notification from './components/Notification/Notification.jsx'
 import Feedback from "./components/feedback/Feedback.jsx";
 import "./App.css";
 
@@ -11,8 +12,7 @@ function App() {
       Good: 0,
       Neutral: 0,
       Bad: 0,
-      Total: 0,
-      Positive: 0
+
     }
     
   });
@@ -20,16 +20,13 @@ function App() {
   const handleOptionClick = (option) => {
     setFeedbackData((prev) => {
       const updatedOption = prev[option] + 1;
-      const updatedTotal = prev.Good + prev.Neutral + prev.Bad + 1;
-      const updatedPositive = Math.round(
-        ((prev.Good + (option === "Good" ? 1 : 0)) / updatedTotal) * 100
-      );
+      
+
 
       return {
         ...prev,
         [option]: updatedOption,
-        Total: updatedTotal,
-        Positive: updatedPositive,
+    
       };
     });
   };
@@ -38,23 +35,27 @@ function App() {
       Good: FeedbackData.Good,
       Neutral: FeedbackData.Neutral,
       Bad: FeedbackData.Bad,
-      Total: FeedbackData.Total,
-      Positive: FeedbackData.Positive,
+      
     };
-    localStorage.clear();
+
     localStorage.setItem('FeedbackData', JSON.stringify(feedbackDataToSave));
-  }, [FeedbackData]); // Добавьте FeedbackData в зависимости
-  
-  const handlReset = () => {
-    setFeedbackData({
+  }, [FeedbackData]); 
+
+  const handleReset = () => {
+    const initialState = {
       Good: 0,
       Neutral: 0,
       Bad: 0,
-      Total: 0,
-      Positive: 0
-    })
+      
+    }
+    setFeedbackData(initialState);
+    localStorage.getItem("feedbackData")
+
   }
-  const hasFeedBack = FeedbackData.Total > 0;
+      const TotalFeedbacks = FeedbackData.Good + FeedbackData.Neutral + FeedbackData.Bad;
+      const PositivePercentage = TotalFeedbacks > 0 
+      ? Math.round((FeedbackData.Good / TotalFeedbacks) * 100) 
+      : 0;
 
   return (
     <>
@@ -62,11 +63,15 @@ function App() {
         <Descriptions />
       </div>
       <div>
-        <Options onOptionClick={handleOptionClick} onReset={handlReset} hasFeedBack={hasFeedBack}/>
+        <Options onOptionClick={handleOptionClick} onReset={handleReset} hasFeedBack={TotalFeedbacks > 0}/>
       </div>
-      {hasFeedBack && 
+      {!TotalFeedbacks > 0 &&
       <div>
-      <Feedback feedbackData={FeedbackData} />
+        <Notification hasFeedBack={TotalFeedbacks > 0} />
+        </div>}
+      {TotalFeedbacks > 0 && 
+      <div>
+      <Feedback feedbackData={FeedbackData} total={TotalFeedbacks} positive={PositivePercentage}/>
   </div>
   }
       

@@ -6,10 +6,9 @@ const Options = ({onOptionClick, onReset, hasFeedBack}) => {
      <button onClick={() => onOptionClick ('Good')}>Good</button>
      <button onClick={() => onOptionClick('Neutral')}>Neutral</button>
      <button onClick={() => onOptionClick('Bad')}>Bad</button>
-     {hasFeedBack ?
-     <button onClick={onReset}>Reset</button>
-     :
-     <p>No Feedback yet</p>
+     {hasFeedBack 
+     ? <button onClick={onReset}>Reset</button>
+     : null
 }
     </div>
   );
