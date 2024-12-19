@@ -1,12 +1,12 @@
 import styles from "./Options.module.css";
 
-const Options = ({onOptionClick, onReset, hasFeedBack}) => {
+const Options = ({onOptionClick, onReset, hasFeedback}) => {
   return (
     <div className={styles.container}>
-     <button onClick={() => onOptionClick ('Good')}>Good</button>
-     <button onClick={() => onOptionClick('Neutral')}>Neutral</button>
-     <button onClick={() => onOptionClick('Bad')}>Bad</button>
-     {hasFeedBack 
+     <button onClick={() => onOptionClick ('good')}>Good</button>
+     <button onClick={() => onOptionClick('neutral')}>Neutral</button>
+     <button onClick={() => onOptionClick('bad')}>Bad</button>
+     {hasFeedback 
      ? <button onClick={onReset}>Reset</button>
      : null
 }

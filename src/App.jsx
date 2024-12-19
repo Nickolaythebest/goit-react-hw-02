@@ -6,12 +6,12 @@ import Feedback from "./components/feedback/Feedback.jsx";
 import "./App.css";
 
 function App() {
-  const [FeedbackData, setFeedbackData] = useState(() => {
-    const savedData = localStorage.getItem('FeedbackData')
+  const [feedbackData, setFeedbackData] = useState(() => {
+    const savedData = localStorage.getItem('feedbackData')
     return savedData ? JSON.parse(savedData) : {
-      Good: 0,
-      Neutral: 0,
-      Bad: 0,
+      good: 0,
+      neutral: 0,
+      bad: 0,
 
     }
     
@@ -31,30 +31,22 @@ function App() {
     });
   };
   useEffect(() => {
-    const feedbackDataToSave = {
-      Good: FeedbackData.Good,
-      Neutral: FeedbackData.Neutral,
-      Bad: FeedbackData.Bad,
-      
-    };
-
-    localStorage.setItem('FeedbackData', JSON.stringify(feedbackDataToSave));
-  }, [FeedbackData]); 
+    localStorage.setItem('feedbackData', JSON.stringify(feedbackData));
+}, [feedbackData]);
 
   const handleReset = () => {
     const initialState = {
-      Good: 0,
-      Neutral: 0,
-      Bad: 0,
+      good: 0,
+      neutral: 0,
+      bad: 0,
       
     }
     setFeedbackData(initialState);
-    localStorage.getItem("feedbackData")
 
   }
-      const TotalFeedbacks = FeedbackData.Good + FeedbackData.Neutral + FeedbackData.Bad;
-      const PositivePercentage = TotalFeedbacks > 0 
-      ? Math.round((FeedbackData.Good / TotalFeedbacks) * 100) 
+      const totalFeedbacks = feedbackData.good + feedbackData.neutral + feedbackData.bad;
+      const positivePercentage = totalFeedbacks > 0 
+      ? Math.round((feedbackData.good / totalFeedbacks) * 100) 
       : 0;
 
   return (
@@ -63,17 +55,15 @@ function App() {
         <Descriptions />
       </div>
       <div>
-        <Options onOptionClick={handleOptionClick} onReset={handleReset} hasFeedBack={TotalFeedbacks > 0}/>
+        <Options onOptionClick={handleOptionClick} onReset={handleReset} hasFeedback={totalFeedbacks > 0}/>
       </div>
-      {!TotalFeedbacks > 0 &&
-      <div>
-        <Notification hasFeedBack={TotalFeedbacks > 0} />
-        </div>}
-      {TotalFeedbacks > 0 && 
-      <div>
-      <Feedback feedbackData={FeedbackData} total={TotalFeedbacks} positive={PositivePercentage}/>
-  </div>
-  }
+      {totalFeedbacks === 0 ? (
+        <Notification />
+        ) : (
+      <Feedback feedbackData={feedbackData} total={totalFeedbacks} positive={positivePercentage}/>
+  )
+}
+  
       
     </>
   );
